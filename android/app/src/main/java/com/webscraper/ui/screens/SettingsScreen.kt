@@ -43,7 +43,8 @@ fun SettingsScreen() {
             }
 
             Spacer(Modifier.height(16.dp))
-            HorizontalDivider()
+            @Suppress("DEPRECATION")
+            Divider()
             Text("关于", style = MaterialTheme.typography.titleMedium)
             Card(Modifier.fillMaxWidth()) {
                 Column(Modifier.padding(16.dp)) {
