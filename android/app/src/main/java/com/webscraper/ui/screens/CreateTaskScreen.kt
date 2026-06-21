@@ -8,15 +8,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.webscraper.viewmodel.CreateTaskViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateTaskScreen(
     onBack: () -> Unit,
-    onOpenSelector: (url: String, name: String) -> Unit
+    onOpenSelector: (url: String, name: String) -> Unit,
+    viewModel: CreateTaskViewModel
 ) {
-    var name by remember { mutableStateOf("") }
-    var url by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf(viewModel.taskName) }
+    var url by remember { mutableStateOf(viewModel.taskUrl) }
     var useJsRender by remember { mutableStateOf(false) }
 
     Scaffold(

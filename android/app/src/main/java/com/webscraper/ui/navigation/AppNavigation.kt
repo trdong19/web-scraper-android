@@ -7,13 +7,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.navigation.NavType
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.webscraper.ui.screens.*
+import com.webscraper.viewmodel.CreateTaskViewModel
 
 sealed class Screen(val route: String, val label: String, val icon: ImageVector) {
     data object Tasks : Screen("tasks", "任务", Icons.Default.List)
@@ -29,8 +29,8 @@ fun AppNavigation() {
     val navController = rememberNavController()
     val navBackStack by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStack?.destination?.route
+    val createTaskViewModel: CreateTaskViewModel = viewModel()
 
-    // Show bottom bar only on main screens
     val showBottomBar = currentRoute in bottomNavItems.map { it.route }
 
     Scaffold(
@@ -81,39 +81,30 @@ fun AppNavigation() {
                 CreateTaskScreen(
                     onBack = { navController.popBackStack() },
                     onOpenSelector = { url, name ->
-                        navController.navigate("selector/${java.net.URLEncoder.encode(url, "UTF-8")}/${java.net.URLEncoder.encode(name, "UTF-8")}")
-                    }
+                        createTaskViewModel.taskName = name
+                        createTaskViewModel.taskUrl = url
+                        navController.navigate("selector")
+                    },
+                    viewModel = createTaskViewModel
                 )
             }
 
-            composable(
-                route = "task/{taskId}",
-                arguments = listOf(navArgument("taskId") { type = NavType.StringType })
-            ) { entry ->
-                val taskId = entry.arguments?.getString("taskId") ?: return@composable
-                TaskDetailScreen(
-                    taskId = taskId,
-                    onBack = { navController.popBackStack() }
-                )
-            }
-
-            composable(
-                route = "selector/{url}/{name}",
-                arguments = listOf(
-                    navArgument("url") { type = NavType.StringType },
-                    navArgument("name") { type = NavType.StringType }
-                )
-            ) { entry ->
-                val url = java.net.URLDecoder.decode(entry.arguments?.getString("url") ?: "", "UTF-8")
-                val name = java.net.URLDecoder.decode(entry.arguments?.getString("name") ?: "", "UTF-8")
+            composable("selector") {
                 VisualSelectorScreen(
-                    url = url,
-                    taskName = name,
+                    viewModel = createTaskViewModel,
                     onBack = { navController.popBackStack() },
                     onRulesCreated = {
                         navController.popBackStack()
                         navController.popBackStack()
                     }
+                )
+            }
+
+            composable("task/{taskId}") { entry ->
+                val taskId = entry.arguments?.getString("taskId") ?: return@composable
+                TaskDetailScreen(
+                    taskId = taskId,
+                    onBack = { navController.popBackStack() }
                 )
             }
         }

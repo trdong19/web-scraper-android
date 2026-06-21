@@ -26,6 +26,7 @@ import com.webscraper.engine.InjectedJS
 import com.webscraper.engine.JsBridge
 import com.webscraper.engine.SelectorGenerator
 import com.google.gson.Gson
+import com.webscraper.viewmodel.CreateTaskViewModel
 import kotlinx.coroutines.launch
 
 enum class SelectorMode { BROWSE, PICK_LIST, PICK_FIELD }
@@ -34,14 +35,15 @@ enum class SelectorMode { BROWSE, PICK_LIST, PICK_FIELD }
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun VisualSelectorScreen(
-    url: String,
-    taskName: String,
+    viewModel: CreateTaskViewModel,
     onBack: () -> Unit,
     onRulesCreated: () -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val gson = remember { Gson() }
+    val url = viewModel.taskUrl
+    val taskName = viewModel.taskName
 
     var currentMode by remember { mutableStateOf(SelectorMode.BROWSE) }
     var listSelector by remember { mutableStateOf("") }
