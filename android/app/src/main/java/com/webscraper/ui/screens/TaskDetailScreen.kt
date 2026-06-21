@@ -72,7 +72,7 @@ fun TaskDetailScreen(taskId: String, onBack: () -> Unit, viewModel: TaskDetailVi
                 0 -> if (uiState.dataItems.isEmpty()) { Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { Text("暂无数据", color = MaterialTheme.colorScheme.outline) } }
                      else { LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) { items(uiState.dataItems, key = { it.id }) { DataItemCard(it) } } }
                 1 -> if (uiState.rules.isEmpty()) { Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { Text("暂无规则", color = MaterialTheme.colorScheme.outline) } }
-                     else { LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) { items(uiState.rules, key = { it.id }) { Card(Modifier.fillMaxWidth()) { Column(Modifier.padding(12.dp)) { Text(rule.name, fontWeight = FontWeight.Bold); Text(rule.listSelector, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.outline) } } } } }
+                     else { LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) { items(uiState.rules, key = { it.id }) { rule -> Card(Modifier.fillMaxWidth()) { Column(Modifier.padding(12.dp)) { Text(rule.name, fontWeight = FontWeight.Bold); Text(rule.listSelector, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.outline) } } } } }
             }
         }
     }

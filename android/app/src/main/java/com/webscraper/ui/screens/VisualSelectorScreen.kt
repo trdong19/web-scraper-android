@@ -30,6 +30,7 @@ import kotlinx.coroutines.launch
 
 enum class SelectorMode { BROWSE, PICK_LIST, PICK_FIELD }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun VisualSelectorScreen(
